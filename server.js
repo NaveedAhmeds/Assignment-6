@@ -2,21 +2,21 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const passport = require("passport"); // <--- THIS WAS MISSING
+const passport = require("passport");
 const jwt = require('jsonwebtoken');
 dotenv.config();
 
 const userService = require("./services/user-service.js");
 const setupPassport = require("./services/passport");
 
-// Initialize passport with the strategy setup
+// Initialize passport with the strategy setup...
 setupPassport(passport);
 
 const HTTP_PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(cors());
-app.use(passport.initialize()); // <--- Need to initialize passport middleware
+app.use(passport.initialize());
 
 app.post("/api/user/register", (req, res) => {
     userService.registerUser(req.body)
@@ -27,7 +27,7 @@ app.post("/api/user/register", (req, res) => {
     });
 });
 
-// Updated login route with JWT token signing
+// Updated login route with JWT token signing...
 app.post("/api/user/login", (req, res) => {
     userService.checkUser(req.body)
     .then((user) => {
@@ -45,7 +45,7 @@ app.post("/api/user/login", (req, res) => {
     });
 });
 
-// Routes protected by passport JWT authentication
+// Routes protected by passport JWT authentication...
 app.get("/api/user/favourites", passport.authenticate('jwt', { session: false }), (req, res) => {
     userService.getFavourites(req.user._id)
     .then(data => {
